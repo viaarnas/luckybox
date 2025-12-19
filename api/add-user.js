@@ -9,9 +9,11 @@ export default function handler(req, res) {
 
   const { username } = req.body;
   if (!username || typeof username !== "string") {
-    const u = username.value.trim().toLowerCase();
+    return res.status(400).json({ message: `User ${u} tidak valid.` });
+  }
+    const u = username.trim().toLowerCase();
     if (u.length < 6 || u.length > 16 || /[^a-zA-Z0-9]/i.test(u)) {
-      return res.status(400).json({ message: `User ${u} tidak valid.` })
+      return res.status(400).json({ message: `User ${u} tidak valid.` });
     }
 
     let users = [];
@@ -23,7 +25,7 @@ export default function handler(req, res) {
     }
 
     if (users.includes(u)) {
-      return.res.json({ message: `User ${u} sudah pernah ditambahkan.` });
+      return res.json({ message: `User ${u} sudah pernah ditambahkan.` });
     }
 
     users.push(u);
