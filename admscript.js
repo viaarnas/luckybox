@@ -14,26 +14,20 @@ function showNotif(message) {
   }, 1000);
 }
 
-function tambahUser() {
+async function tambahUser() {
   let list = JSON.parse(localStorage.getItem("listUser") || "[]");
   const u = username.value.trim();
-  if (tambah.disabled) return;
-  if (u.length < 6 || u.length > 16) {
-    showNotif("User " + u + " tidak valid.");
-    return;
-  }
-  if (/[^a-zA-Z0-9]/.test(u)) {
-    showNotif("User " + u + " tidak valid.");
-    return;
-  }
-  if (list.includes(u.toLowerCase())) {
-    showNotif("User " + u + " sudah pernah ditambahkan.");
-    return;
-  }
-  else {
-    list.push(u.toLowerCase());
-    localStorage.setItem("listUser", JSON.stringify(list));
-    showNotif("Berhasil tambah user " + u + ".")
+
+  try {
+    const res = await fetch("api/add-user", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ username: u})
+    });
+  const data = await res.json();
+  showNotif(data.message);
+  } catch (err) {
+    swowNotif("Gagal menghubungi server.");
   }
 }
 
