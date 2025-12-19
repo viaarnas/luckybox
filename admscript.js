@@ -15,9 +15,9 @@ function showNotif(message) {
 }
 
 async function tambahUser() {
-  let list = JSON.parse(localStorage.getItem("listUser") || "[]");
   const u = username.value.trim();
-
+  if (tambah.disabled) return;
+  
   try {
     const res = await fetch("api/add-user", {
       method: "POST",
@@ -27,7 +27,7 @@ async function tambahUser() {
   const data = await res.json();
   showNotif(data.message);
   } catch (err) {
-    swowNotif("Gagal menghubungi server.");
+    showNotif("Gagal menghubungi server.");
   }
 }
 
